@@ -5,6 +5,8 @@ import Home from './pages/Home';
 import Footer from './components/Footer';
 import AllRooms from './pages/AllRooms';
 import RoomDetails from './pages/RoomDetails';
+import Mybookings from './components/Mybookings';
+import HotelReg from './components/HotelReg';
 
 
 function App() {
@@ -13,11 +15,14 @@ function App() {
   return (
     <div>
       {!isOwnerpath && <Navbar />}
+      {false && <HotelReg />}
+
       <div className="min-h-[70vh]">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/rooms" element={<AllRooms />} />
-          <Route path='/rooms/:id' element={ <RoomDetails/>} />
+          <Route path="/rooms/:id" element={<RoomDetails />} />
+          <Route path="/my-bookings" element={<Mybookings />} />
         </Routes>
       </div>
       <Footer />
