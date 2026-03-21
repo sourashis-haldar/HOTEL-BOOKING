@@ -1,16 +1,111 @@
-# React + Vite
+# 🏨 Hotel Booking Frontend (React + Clerk)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![React](https://img.shields.io/badge/React-18-blue?logo=react)
+![Vite](https://img.shields.io/badge/Vite-Fast-purple?logo=vite)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-Utility--First-38B2AC?logo=tailwind-css)
+![Clerk](https://img.shields.io/badge/Auth-Clerk-black)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-Currently, two official plugins are available:
+A modern **Hotel Booking Web Application (Frontend Only)** built using **React (Vite)** and **Clerk Authentication**.  
+This project provides a clean and responsive UI for browsing hotels, viewing room details, and managing bookings.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 🚀 Live Demo
+👉 https://hotel-booking-nine-ochre.vercel.app
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+👉 https://urgentstay.netlify.app
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## ✨ Features
+
+- 🔐 Secure Authentication with Clerk (Login / Signup)
+- 🏨 Browse available hotel rooms
+- 📄 Detailed room information page
+- 📅 Booking interface (UI only)
+- 👤 User bookings page
+- 🧑‍💼 Hotel Owner dashboard UI
+- 🎯 Clean and modern UI/UX
+- 📱 Fully responsive design
+- ⚡ Fast performance using Vite
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+- ⚛️ React (Vite)
+- 🎨 Tailwind CSS
+- 🔐 Clerk Authentication
+- 🌐 HTML5 + JavaScript (ES6+)
+
+---
+
+## 📂 Project Structure
+```Hotel Booking/
+├─ public/
+│ └─ favicon.svg
+├─ src/
+│ ├─ assets/
+│ │ ├─ images, icons, and static assets
+│ ├─ components/
+│ │ ├─ hotelOwner/
+│ │ │ ├─ Navbar.jsx
+│ │ │ └─ Sidebar.jsx
+│ │ ├─ ExclusiveOffers.jsx
+│ │ ├─ FeatureDestination.jsx
+│ │ ├─ Footer.jsx
+│ │ ├─ Hero.jsx
+│ │ ├─ HotelCard.jsx
+│ │ ├─ HotelReg.jsx
+│ │ ├─ Mybookings.jsx
+│ │ ├─ Navbar.jsx
+│ │ ├─ NewsLetter.jsx
+│ │ ├─ Testimonials.jsx
+│ │ └─ Title.jsx
+│ ├─ pages/
+│ │ ├─ hotelOwner/
+│ │ │ ├─ AddRoom.jsx
+│ │ │ ├─ Dashboard.jsx
+│ │ │ ├─ Layout.jsx
+│ │ │ └─ ListRoom.jsx
+│ │ ├─ AllRooms.jsx
+│ │ ├─ Home.jsx
+│ │ └─ RoomDetails.jsx
+│ ├─ App.jsx
+│ ├─ main.jsx
+│ └─ index.css
+├─ .env
+├─ .gitignore
+├─ index.html
+├─ package.json
+├─ vite.config.js
+└─ README.md
+```
+## ⚙️ Getting Started
+
+### 1️⃣ Clone the Repository
+
+```bash
+git clone https://github.com/sourashis-haldar/HOTEL-BOOKING.git
+cd HOTEL-BOOKING
+```
+
+## ⚙️ Installation & Setup
+
+### 2️⃣ Install Dependencies
+
+```bash
+npm install
+```
+### 3️⃣ Setup Environment Variables
+```bash 
+VITE_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+```
+### 4️⃣ Run the Development Server
+```bash 
+npm run dev
+```
+
+
