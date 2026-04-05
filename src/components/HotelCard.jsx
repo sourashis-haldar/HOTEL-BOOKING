@@ -23,7 +23,7 @@ function HotelCard({room,index}) {
             {room.hotel.name}
           </p>
           <div className="flex items-center gap-1">
-            <img src={assets.starIconFilled} alt="start-icon" /> 4.5
+            <img src={assets.starIconFilled} alt="start-icon" /> 4.6
           </div>
         </div>
         <div className='flex'>
