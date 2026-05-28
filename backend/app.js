@@ -3,9 +3,10 @@ import 'dotenv/config'
 import { clerkMiddleware } from '@clerk/express'
 import cors from 'cors'
 import ConectDB from './db/db.js';
-import clerkWebhooks from './controllers/clerkWebhooks.js';
+import webhooksRouter from './routes/webhooks.routes.js';
 
-const app = express();
+const app=express();
+
 app.use(cors());
 app.use(express.json({
   verify: (req, res, buf) => {
@@ -13,8 +14,12 @@ app.use(express.json({
   },
 }));
 
-app.use('/api/clerk', clerkWebhooks)
+
 app.use(clerkMiddleware())
+
+
+
+app.use('/api/webhooks',webhooksRouter);
 
 app.get('/', (req, res) => {
   res.send('hiiii serverr.....')

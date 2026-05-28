@@ -56,6 +56,4 @@ const handleClerkWebhook = async (req, res) => {
   }
 }
 
-router.post('/webhooks', handleClerkWebhook)
-
-export default router
+export default handleClerkWebhook;
