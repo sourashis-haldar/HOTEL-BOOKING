@@ -4,21 +4,25 @@ import { clerkMiddleware } from '@clerk/express'
 import cors from 'cors'
 import ConectDB from './db/db.js';
 import clerkWebhooks from './controllers/clerkWebhooks.js';
-const app=express();
+const app = express();
 app.use(cors());
-express.json();
-app.use(clerkMiddleware())
+app.use(express.json({
+  verify: (req, res, buf) => {
+    req.rawBody = buf.toString();
+  },
+}));
+app.use(clerkMiddleware());
 
-app.use('/api/clerk',clerkWebhooks);
+app.use('/api/clerk', clerkWebhooks);
 
 
 
-app.get('/',(req,res,next)=>[
+app.get('/', (req, res, next) => [
   res.send("hiiii serverr.....")
 ])
-const PORT=process.env.PORT || 3002
+const PORT = process.env.PORT || 3002
 
-app.listen(PORT,()=>{
+app.listen(PORT, () => {
   ConectDB();
   console.log(`server start at http://localhost:${PORT}`);
 })
