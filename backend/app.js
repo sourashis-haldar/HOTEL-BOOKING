@@ -6,7 +6,7 @@ import ConectDB from './db/db.js';
 import webhooksRouter from './routes/webhooks.routes.js';
 
 const app=express();
-
+await ConectDB();
 app.use(cors());
 app.use(express.json({
   verify: (req, res, buf) => {
@@ -27,6 +27,6 @@ app.get('/', (req, res) => {
 const PORT = process.env.PORT || 3002
 
 app.listen(PORT, () => {
-  ConectDB();
+  
   console.log(`server start at http://localhost:${PORT}`);
 })
