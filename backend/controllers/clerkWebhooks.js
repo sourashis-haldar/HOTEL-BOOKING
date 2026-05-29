@@ -16,11 +16,16 @@ const handleClerkWebhook = async (req, res) => {
     const rawBody = req.rawBody || JSON.stringify(req.body)
     const event = await wbhooks.verify(rawBody, headers)
     const { data, type } = event
+    const firstName = data.first_name || "";
+    const lastName = data.last_name || "";
 
-    console.log('Clerk webhook received:', type, data?.id)
+    // create username
+    const username = `${firstName} ${lastName}`
+    
 
     const userData = {
       _id: data.id,
+      username:username,
       email: data.email_addresses?.[0]?.email_address ?? '',
       image: data.image_url || data.profile_image_url || '',
     }
