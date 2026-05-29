@@ -2,7 +2,7 @@ import express from 'express'
 import User from '../models/User.model.js'
 import { Webhook } from 'svix'
 
-const router = express.Router()
+
 
 const handleClerkWebhook = async (req, res) => {
   try {
