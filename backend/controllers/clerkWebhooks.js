@@ -1,7 +1,7 @@
 import express from 'express'
 import User from '../models/User.model.js'
 import { Webhook } from 'svix'
-
+import 'dotenv/config'
 
 
 const handleClerkWebhook = async (req, res) => {

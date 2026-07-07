@@ -8,18 +8,20 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon app.js",
+    "dev": "nodemon server.js",
     "start": "node app.js"
   },
   "dependencies": {
     "@clerk/express": "^2.1.22",
     "axios": "^1.16.1",
+    "cloudinary": "^2.10.0",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "mongodb": "^7.2.0",
     "mongoose": "^9.6.3",
     "multer": "^2.1.1",
+    "nodemailer": "^8.0.10",
     "nodemon": "^3.1.14",
     "svix": "^1.94.0"
   }
