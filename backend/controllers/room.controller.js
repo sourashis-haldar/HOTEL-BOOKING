@@ -1,6 +1,7 @@
 import Room from "../models/room.model.js";
 import Hotel from '../models/Hotel.model.js'
 import { v2 as cloudinary } from 'cloudinary'
+import streamifier from "streamifier";
 import fs from 'fs'
 
 //create room api
@@ -20,11 +21,25 @@ export const createRoom=async(req,res)=>{
         message:"Plese upload all images"
       })
     }
-   const uploadImages=req.files.map(async (file)=>{
-      const response=await cloudinary.uploader.upload(file.path);
-    await fs.unlinkSync(file.path);
-      return response.secure_url;
-    })
+    const uploadToCloudinary = (file) => {
+      return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          {
+            folder: "hotel-booking", // optional
+          },
+          (error, result) => {
+            if (error) return reject(error);
+            resolve(result.secure_url);
+          }
+        );
+
+        streamifier.createReadStream(file.buffer).pipe(stream);
+      });
+    };
+
+    const uploadImages = await Promise.all(
+      req.files.map((file) => uploadToCloudinary(file))
+    );
 const images= await Promise.all(uploadImages)
 await Room.create({
   hotel:hotel._id,
