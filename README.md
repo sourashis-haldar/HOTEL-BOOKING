@@ -22,7 +22,7 @@ A modern <strong>Full Stack Hotel Booking Web Application</strong> built with th
 # 🌐 Live Demo
 
 ### 🚀 Frontend
-👉 https://hotel-booking-nine-ochre.vercel.app
+👉 https://hotel-booking-frontend-five-teal.vercel.app
 
 
 ---
