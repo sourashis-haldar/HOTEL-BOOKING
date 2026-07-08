@@ -61,7 +61,7 @@ const booking=await Booking.create({
   user,
   room,
   hotel:roomData.hotel._id,
-  guests:+guests,
+  guests:Number(guests),
   checkInDate,
   checkOutDate,
   totalPrice
