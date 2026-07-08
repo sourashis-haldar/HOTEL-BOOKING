@@ -52,7 +52,7 @@ const {data} =await axios.post("/api/rooms/uploads", formdata, {
     Authorization: `Bearer ${await getToken()}`
   },
 });
-
+console.log(data)
 if (data.success) {
   setisloading(false);
   setimages({
