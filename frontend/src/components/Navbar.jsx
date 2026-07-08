@@ -1,7 +1,10 @@
-import React from 'react'
-import { assets } from '../assets/assets'
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useClerk, useUser,UserButton } from '@clerk/clerk-react';
+import React, { useState } from "react";
+import { assets } from "../assets/assets";
+import { Link, useLocation } from "react-router-dom";
+import { useClerk, UserButton } from "@clerk/clerk-react";
+import { useAuth } from "@clerk/clerk-react";
+import HotelReg from "./HotelReg";
+import { useAppContext } from "../context/AppContext";
 const Navbar = () => {
   const navLinks = [
     { name: "Home", path: "/" },
@@ -9,29 +12,35 @@ const Navbar = () => {
     { name: "Experinece", path: "/" },
     { name: "About", path: "/" },
   ];
-
   const Bookicon = () => (
-  <svg className="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" >
-    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 19V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v13H7a2 2 0 0 0-2 2Zm0 0a2 2 0 0 0 2 2h12M9 3v14m7 0v4" />
-</svg>
-  )
+    <svg
+      className="w-4 h-4 text-gray-700"
+      aria-hidden="true"
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <path
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+        d="M5 19V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v13H7a2 2 0 0 0-2 2Zm0 0a2 2 0 0 0 2 2h12M9 3v14m7 0v4"
+      />
+    </svg>
+  );
 
   const [isScrolled, setIsScrolled] = React.useState(false);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const { openSignIn } = useClerk();
-  const { user } = useUser();
-  const navigate = useNavigate();
   const location = useLocation();
 
-
-
-
+  const { setShowHotelReg, isowner, navigate, user } = useAppContext();
 
   React.useEffect(() => {
-
-
-   
-    setIsScrolled(prev => location.pathname !== '/' ? true : prev);
+    setIsScrolled((prev) => (location.pathname !== "/" ? true : prev));
 
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
@@ -58,7 +67,7 @@ const Navbar = () => {
         {navLinks.map((link, i) => (
           <Link
             key={i}
-          to={link.path}
+            to={link.path}
             className={`group flex flex-col gap-0.5 ${isScrolled ? "text-gray-700" : "text-white"}`}
           >
             {link.name}
@@ -67,12 +76,16 @@ const Navbar = () => {
             />
           </Link>
         ))}
-        <button
-          onClick={() => navigate("/owner")}
-          className={`border px-4 py-1 text-sm font-light rounded-full cursor-pointer ${isScrolled ? "text-black" : "text-white"} transition-all`}
-        >
-          Dashboard
-        </button>
+        {user && (
+          <button
+            onClick={() =>
+              isowner ? navigate("/owner") : setShowHotelReg(true)
+            }
+            className={`border px-4 py-1 text-sm font-light rounded-full cursor-pointer ${isScrolled ? "text-black" : "text-white"} transition-all`}
+          >
+            {isowner ? "Dashboard" : "List your Hotel"}
+          </button>
+        )}
       </div>
 
       {/* Desktop Right */}
@@ -143,9 +156,9 @@ const Navbar = () => {
         {user && (
           <button
             className="border px-4 py-1 text-sm font-light rounded-full cursor-pointer transition-all"
-            onClick={() => navigate("/owner")}
+            onClick={() => isowner? navigate("/owner"):setShowHotelReg(false)}
           >
-            Dashboard
+            {isowner ? "Dashboard":"List your hotel"}
           </button>
         )}
 

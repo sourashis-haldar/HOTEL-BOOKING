@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { assets, facilityIcons, roomCommonData, roomsDummyData, userDummyData } from "../assets/assets";
-
+import { assets, facilityIcons, roomCommonData, userDummyData } from "../assets/assets";
+import { useAppContext } from "../context/AppContext";
+import { LoaderCircle } from "lucide-react";
+import toast from "react-hot-toast";
 function RoomDetails() {
   const Star = ({ filled }) => (
     <svg
@@ -21,14 +23,103 @@ function RoomDetails() {
 
   const { id } = useParams();
   const [room, setroom] = useState(null);
+  const {rooms,axios,getToken,navigate}=useAppContext()
   const [mainImage, setmainImage] = useState(null);
+  const [isAvailable, setAvailable]=useState(false);
+const [isloading,setisloading]=useState(false)
+  const fetchroom=async()=>{
+    const { data } = await axios.get(`/api/rooms/single-room/${id}`);
+    if(data.succes){
+          const room =data.room;
+          console.log(room)
+          room && setroom(room);
+
+          room && setmainImage(room.images[0]);
+    }
+  }
   useEffect(() => {
-    const room = roomsDummyData.find((room) => {
-      return room._id === id;
+
+fetchroom();
+
+  },[id]);
+const [formdata, setformdata] = useState({
+  checkInDate: "",
+  checkOutDate:"",
+  guests:"",
+  room:id
+});
+
+const handelchnage=(e)=>{
+  setformdata({...formdata,[e.target.name]:e.target.value})
+}
+
+const hnadelcheckAvailable=async (e)=>{
+e.preventDefault();
+
+try {
+  if(!formdata.checkInDate || ! formdata.checkOutDate){
+    return toast.error("plese fill all field");
+  }
+  const { data } = await axios.post("/api/bookings/cheeck-avalibality",formdata);
+  console.log(formdata)
+  if(data.success){
+    
+    if (data.isAvailabe) {
+      setAvailable(true);
+      toast.success("Room is Available");
+    } else {
+setformdata({
+  checkInDate: "",
+  checkOutDate: "",
+  guest: "",
+  room: id,
+});
+      toast.error("Room is Not Available");
+    }
+    
+  }else{
+    toast.error(data.message);
+  }
+} catch (error) {
+  toast.error(error.message);
+}
+}
+
+const handelbookings=async(e)=>{
+  e.preventDefault();
+  setisloading(true);
+  try {
+    const { data } = await axios.post("/api/bookings/crete-booking", formdata, {
+      headers: {
+        Authorization: `Bearer ${await getToken()}`,
+      },
     });
-    room && setroom(room);
-    room && setmainImage(room.images[0]);
-  }, [room]);
+    console.log(data)
+    if (data.success){
+      setisloading(false)
+      setformdata({
+        checkInDate: "",
+        checkOutDate: "",
+        guests: "",
+        room: id,
+      });
+toast.success(data.message);
+navigate("/my-bookings");
+
+    } else{
+      toast.error(data.message)
+
+    }
+  } catch (error) {
+    toast.error(error.message);
+  }
+  finally{
+    setisloading(false)
+  }
+}
+
+
+
   return (
     room && (
       <div className="py-28 md:py-35 px-4 md:px-16 lg:px-24 xl:px-32">
@@ -108,12 +199,17 @@ function RoomDetails() {
             </div>
           </div>
           {/* Room Price */}
-          <p className="text-2xl font-medium">${room.pricePerNight}/night</p>
+          <p className="text-2xl font-medium">{room.pricePerNight}/night</p>
         </div>
 
         {/* Check in form */}
 
-        <form className="flex flex-col md:flex-row items-start md:items-center justify-between bg-white shadow-[0px_0px_20px_rgba(0,0,0,0.15)] p-6 rounded-xl mx-auto mt-16 max-w-6xl">
+        <form
+          onSubmit={(e) => {
+            isAvailable ? handelbookings(e) : hnadelcheckAvailable(e);
+          }}
+          className="flex flex-col md:flex-row items-start md:items-center justify-between bg-white shadow-[0px_0px_20px_rgba(0,0,0,0.15)] p-6 rounded-xl mx-auto mt-16 max-w-6xl"
+        >
           <div className="flex flex-col flex-wrap md:flex-row items- md:items-center  justify-center gap-4 md:gap-10 text-gray-500">
             <div>
               <div className="flex  items-center gap-2">
@@ -122,6 +218,10 @@ function RoomDetails() {
               </div>
               <input
                 id="checkIn"
+                name="checkInDate"
+                value={formdata.checkInDate}
+                onChange={handelchnage}
+                min={new Date().toISOString().split("T")[0]}
                 type="date"
                 className=" rounded border border-gray-200 px-3 py-1.5 mt-1.5 text-sm outline-none"
               />
@@ -135,6 +235,11 @@ function RoomDetails() {
               <input
                 id="checkOut"
                 type="date"
+                name="checkOutDate"
+                value={formdata.checkOutDate}
+                min={formdata.checkInDate}
+                disabled={!formdata.checkInDate}
+                onChange={handelchnage}
                 className=" rounded border border-gray-200 px-3 py-1.5 mt-1.5 text-sm outline-none"
               />
             </div>
@@ -144,6 +249,10 @@ function RoomDetails() {
               <input
                 min={1}
                 max={4}
+                required
+                name="guests"
+                onChange={handelchnage}
+                value={formdata.guests}
                 id="guests"
                 type="number"
                 className=" rounded border border-gray-200 px-3 py-1.5 mt-1.5 text-sm outline-none  max-w-16"
@@ -153,9 +262,29 @@ function RoomDetails() {
           </div>
           <button
             type="submit"
-            className="bg-primary hover:bg-primary-dull active:scale-95 transition-all text-white rounded-md max-md:w-full max-md:mt-6 md:px-25 py-3 md:py-4 text-base cursor-pointer"
+            disabled={isloading}
+            className={`rounded-md max-md:w-full max-md:mt-6 md:px-25 py-3 md:py-4 text-base transition-all
+    ${
+      isloading
+        ? "bg-gray-400 cursor-not-allowed"
+        : "bg-primary hover:bg-primary-dull active:scale-95 cursor-pointer text-white"
+    }`}
           >
-            Check Avilability
+            {isAvailable ? (
+              <>
+                {" "}
+                {isloading ? (
+                  <>
+                    <LoaderCircle className="h-4 w-4 animate-spin inline" />{" "}
+                    Booking...
+                  </>
+                ) : (
+                  "Booking Now"
+                )}
+              </>
+            ) : (
+              "Check Avilability"
+            )}
           </button>
         </form>
 
@@ -200,7 +329,7 @@ function RoomDetails() {
             <img
               src={userDummyData.image}
               alt=""
-              className="h-14 w-14 md:h-18 md:w-18 rounded-full object-cover"
+              className="h-14 w-14 md:h-18 md:w-18 rounded-full"
             />
 
             <div>

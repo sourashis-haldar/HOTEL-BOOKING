@@ -67,7 +67,8 @@ const booking=await Booking.create({
   totalPrice
 })
 
-
+    const hoteldetails = await Hotel.findById(roomData.hotel._id);
+    console.log(hoteldetails)
 const mailoptions={
   to:req.user.email,
   subject:"Hotel Booking Details",
@@ -77,14 +78,19 @@ const mailoptions={
   <p>Thank You for your booking ! Here are your details</p>
   <ul>
   <li>
-  <strong>Hotel Name: </strong>${booking._id}
+  <strong>Hotel Name: </strong>${hoteldetails.name}
   </li>
 <li>
-  <strong>Location: </strong>${booking._id}
-  </li><li>
-  <strong>Date: </strong>${booking._id}
-  </li><li>
-  <strong>Booking Amount </strong>${booking._id}
+  <strong>Location: </strong>${hoteldetails.address}
+  </li>
+  <li>
+  <strong>CheckIn Date: </strong>${new Date(booking.checkInDate).toLocaleDateString()}
+  </li>
+  <li>
+  <strong>CheckOut Date: </strong>${new Date(booking.checkOutDate).toLocaleDateString() }
+  </li>
+  <li>
+  <strong>Booking Amount </strong>${booking.totalPrice}
   </li>
   </ul>
   `
@@ -165,13 +171,14 @@ export const cancelBookings=async(req,res)=>{
 
 try {
   const {bookingid}=req.params;
-  const booking=await Booking.findByIdAndDelete(bookingid);
+  const booking=await Booking.findById(bookingid);
   if(!booking){
     return res.status(400).json({
       success:false,
       message:"Booking Not Found"
     })
   }
+  await Booking.findByIdAndDelete(bookingid);
   return res.status(200).json({
 success:true,
 message:"Booking Cancel Succefully"

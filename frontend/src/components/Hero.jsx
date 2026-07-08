@@ -1,6 +1,33 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { assets, cities } from "../assets/assets";
+import { useAppContext } from '../context/AppContext';
 function Hero() {
+
+const [destination,setdestination]=useState("");
+const { navigate, getToken, axios, setSearchCities }=useAppContext();
+
+const onSearch=async (e)=>{
+e.preventDefault();
+navigate(`/rooms?destination=${destination}`)
+
+  const { data } =await axios.post(
+    "/api/user/store-recent-search",
+    {
+      recentSearchedCities: destination,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${await getToken()}`,
+      },
+    },
+  );
+  
+
+
+
+}
+
+
   return (
     <div className='flex flex-col items-start justify-center px-6 md:px-16 lg:px-24 xl:px-32 text-white bg-[url("/src/assets/heroImage.png")] bg-no-repeat bg-cover bg-center h-screen'>
       <p className="bg-[#49B9FF80] px-3.5 py-1 rounded-full mt-20">
@@ -14,7 +41,7 @@ function Hero() {
         hotels and resorts. Start your journey today.
       </p>
 
-      <form className="bg-white text-gray-500 rounded-lg px-6 py-4 mt-8 flex flex-col md:flex-row max-md:items-start gap-4 max-md:mx-auto">
+      <form onSubmit={onSearch} className="bg-white text-gray-500 rounded-lg px-6 py-4 mt-8 flex flex-col md:flex-row max-md:items-start gap-4 max-md:mx-auto">
         <div>
           <div className="flex items-center gap-2">
             <img src={assets.locationIcon} className="h-4" alt="" />
@@ -24,6 +51,8 @@ function Hero() {
             list="destinations"
             id="destinationInput"
             type="text"
+            onChange={(e)=>setdestination(e.target.value)}
+            value={destination}
             className=" rounded border border-gray-200 px-3 py-1.5 mt-1.5 text-sm outline-none"
             placeholder="Type here"
             required

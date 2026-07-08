@@ -77,7 +77,7 @@ select:"image"
 export const getroom=async(req,res)=>{
   try {
     const { id } = req.params;
-    const room = await Room.findById(id);
+    const room = await Room.findById(id).populate("hotel")
     if (room) {
       return res.json({
         succes: true,
